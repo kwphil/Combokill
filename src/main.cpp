@@ -14,7 +14,7 @@ void poll_event(SDL_Event* event, bool* running);
 
 static struct SdlData {
         SDL_Window* window;
-        SDL_Renderer* renderer;
+        SDL_GLContext context;
         SDL_Event event;
 } sdl_data;
 
@@ -31,8 +31,6 @@ int main() {
                 poll_event(&sdl_data.event, &running);
 
                 SDL_UpdateWindowSurface(sdl_data.window);
-                SDL_RenderClear(sdl_data.renderer);
-                SDL_RenderPresent(sdl_data.renderer);
 
                 SDL_Delay(16);
         }
@@ -57,21 +55,15 @@ bool init() {
                 SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
         );
 
-        SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
+        SDL_GLContext context = SDL_GL_CreateContext(window);
 
-        if(!window) {
+        if(!(window || context)) {
                 std::cerr << SDL_GetError() << std::endl;
                 return 1;
         }
-
-        if(!renderer) {
-                std::cerr << SDL_GetError() << std::endl;
-                return 1;
-        }
-
 
         sdl_data.window = window;
-        sdl_data.renderer = renderer;
+        sdl_data.context = context;
         
         return 0;
 }
@@ -79,6 +71,6 @@ bool init() {
 void quit() {
         std::cout << "Exiting successfully";
         SDL_DestroyWindow(sdl_data.window);
-        SDL_DestroyRenderer(sdl_data.renderer);
+        SDL_GL_CreateContext(sdl_data.window);
         SDL_Quit();
 }

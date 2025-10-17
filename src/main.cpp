@@ -14,7 +14,7 @@ void quit();
 static struct SdlData {
         SDL_Window* window;
         SDL_Renderer* renderer;
-        SDL_Event* event;
+        SDL_Event event;
 } sdl_data;
 
 int main() {
@@ -27,8 +27,8 @@ int main() {
         bool running = true;
 
         while(running) {
-                while(SDL_PollEvent(sdl_data.event)) {
-                        if(sdl_data.event->type == SDL_EVENT_QUIT) {
+                while(SDL_PollEvent(&sdl_data.event)) {
+                        if(sdl_data.event.type == SDL_EVENT_QUIT) {
                                 running = false;
                         }
                 }
@@ -64,8 +64,10 @@ bool init() {
                 return 1;
         }
 
+
         sdl_data.window = window;
         sdl_data.renderer = renderer;
+        
         return 0;
 }
 

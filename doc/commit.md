@@ -2,6 +2,8 @@
 
 **DO NOT COMMIT TO MAIN**
 
+**Note:** Make sure your editor is set up for .editorconfig. If using VSCode, install the plugin for it
+
 * Step 1: Switch to a different branch
 * Step 2: Add your code
 * Step 3: Request a merge to be talked about later

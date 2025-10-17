@@ -10,3 +10,10 @@ This game is meant to bring life and style into regular shooting
 * Large physics-based combos (More options that we wouldn't think of)
 * Deflections and parry's
 * Advanced melee combos with ranged weapons
+
+### Dependencies
+
+* SDL3
+* CMake
+* gcc
+

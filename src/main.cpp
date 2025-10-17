@@ -51,6 +51,10 @@ void poll_event(SDL_Event* event, bool* running) {
 bool init() {
         SDL_Init(SDL_INIT_VIDEO);
 
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        
         SDL_Window* window = SDL_CreateWindow("Combokill", 800, 600, 
                 SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
         );
@@ -61,6 +65,8 @@ bool init() {
                 std::cerr << SDL_GetError() << std::endl;
                 return 1;
         }
+
+        SDL_GL_MakeCurrent(window, context);
 
         sdl_data.window = window;
         sdl_data.context = context;

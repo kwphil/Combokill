@@ -7,6 +7,10 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_events.h>
 
+#include <GL/glew.h>
+
+#include "poly.h"
+
 int main();
 bool init();
 void quit();
@@ -30,7 +34,8 @@ int main() {
         while(running) {
                 poll_event(&sdl_data.event, &running);
 
-                SDL_UpdateWindowSurface(sdl_data.window);
+                draw_poly();
+                SDL_GL_SwapWindow(sdl_data.window);
 
                 SDL_Delay(16);
         }
@@ -66,11 +71,21 @@ bool init() {
                 return 1;
         }
 
+        glewExperimental = GL_TRUE;
+
+        GLenum err = glewInit();
+        if(err != GLEW_OK) {
+                std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(err) << "\n";
+                return 1;
+        }
+
         SDL_GL_MakeCurrent(window, context);
 
         sdl_data.window = window;
         sdl_data.context = context;
         
+        draw_poly_init();
+
         return 0;
 }
 

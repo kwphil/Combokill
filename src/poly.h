@@ -1,9 +1,10 @@
 #ifndef POLY_H
 #define POLY_H
 
+#include "etc.h"
 
-void draw_poly_init();
-void draw_poly();
+EXTERN_C void draw_poly_init();
+EXTERN_C void draw_poly();
 
 #endif
 

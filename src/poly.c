@@ -1,29 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <GL/glew.h>
 
 #include "poly.h"
+#include "etc.h"
+
+extern GLfloat* matrix_transform;
 
 float vertices[] = {
-        0.0f, 0.5f, 0.0f,   // Top
-        -0.5f, -0.5f, 0.0f, // Bottom Left
-        0.5f, -0.5f, 0.0f   // Bottom Right
+        -1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,
+         1.0f, 1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f,-1.0f,
+         1.0f, 1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,
+         1.0f,-1.0f,-1.0f,
+         1.0f, 1.0f,-1.0f,
+         1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,
+         1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,
+         1.0f,-1.0f, 1.0f,
+         1.0f, 1.0f, 1.0f,
+         1.0f,-1.0f,-1.0f,
+         1.0f, 1.0f,-1.0f,
+         1.0f,-1.0f,-1.0f,
+         1.0f, 1.0f, 1.0f,
+         1.0f,-1.0f, 1.0f,
+         1.0f, 1.0f, 1.0f,
+         1.0f, 1.0f,-1.0f,
+        -1.0f, 1.0f,-1.0f,
+         1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+         1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,
+         1.0f,-1.0f, 1.0f
+
 };
-
-const char* vertexShaderSource = 
-        "#version 330 core\n"
-	"layout(location = 0) in vec3 aPos;\n"
-	"void main() { \n"
-	"	gl_Position = vec4(aPos, 1.0);\n"
-	"}\n";
-
-const char* fragmentShaderSource =
-	"#version 330 core\n"
-	"out vec4 FragColor;\n"
-	"void main() {\n"
-	"	FragColor = vec4(1.0, 0.5, 0.2, 1.0);\n"
-	"}\n";
 
 GLuint VAO, VBO;
 GLuint shaderProgram;
+
+/* Returns pointer of the shader program */
+int build_shaders(const char* vert_path, const char* frag_path) {
+        /* Read files */
+        char vert_source[SHADER_SOURCE_SIZE];
+        char frag_source[SHADER_SOURCE_SIZE];
+
+        FILE* vf = fopen(vert_path, "r");
+        FILE* ff = fopen(frag_path, "r");
+        
+        fgets(vert_source, SHADER_SOURCE_SIZE, vf);
+        fgets(frag_source, SHADER_SOURCE_SIZE, ff);
+
+        fclose(vf);
+        fclose(ff);
+
+        /* Compile shaders */
+        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, (const char*)&vert_source, NULL);
+        glCompileShader(vertexShader);
+
+        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &(const char*)frag_source, NULL);
+        glCompileShader(fragmentShader);
+
+        /* Check success of shaders */
+        GLint success;
+        GLchar infoLog[512];
+
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+        if(!success) {
+                glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+                fprintf(stderr, "Vertex shader compilation failed:\n%s\n", infoLog);
+                exit(2);
+        }
+
+        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+        if(!success) {
+                glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+                fprintf(stderr, "Fragment Shader Compilation Failed:\n%s\n", infoLog);
+                exit(3);
+        }
+
+        /* Link shaders */
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+
+        /* Delete shaders */
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+
+        return shaderProgram;
+}
 
 void draw_poly_init() {
         glGenVertexArrays(1, &VAO);
@@ -37,28 +118,20 @@ void draw_poly_init() {
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
         glEnableVertexAttribArray(0);
 
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
+        build_shaders("shaders/vert.glsl", "shaders/frag.glsl");
 
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
+        glEnable(GL_DEPTH_TEST);
 }
 
 void draw_poly() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
+
+        GLuint mvpLoc = glGetUniformLocation(shaderProgram, "MVP");
+        glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, matrix_transform);
+
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 12*3);
 }

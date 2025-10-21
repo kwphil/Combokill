@@ -7,4 +7,6 @@
 #  define EXTERN_C
 #endif
 
+#define SHADER_SOURCE_SIZE 512
+
 #endif

@@ -104,7 +104,7 @@ int init() {
         sdl_data.context = context;
  
         // Done initializing window, set camera
-        camera = make_object<Camera>(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        camera = make_object<Camera>(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -5.0f));
 
         // Done initializing camera, start drawing
         draw_poly_init();

@@ -15,4 +15,4 @@ public:
         void strafe(float speed);
 };
 
-extern void move_camera();
+extern void move_camera(float speed = 0.1f);

@@ -24,23 +24,23 @@ void Camera::strafe(float speed) {
         origin += normalize_right() * speed;
 }
 
-void move_camera() {
+void move_camera(float speed) {
         Camera* camera = static_cast<Camera*>(object_list.at(0));
 
         if(keymap[SDL_SCANCODE_W]) {
-                camera->origin -= glm::vec3(0.0, 0.0, 1.0);
+                camera->origin -= glm::vec3(0.0, 0.0, speed);
         }
 
         if(keymap[SDL_SCANCODE_S]) {
-                camera->origin += glm::vec3(0.0, 0.0, 1.0);
+                camera->origin += glm::vec3(0.0, 0.0, speed);
         }
 
         if(keymap[SDL_SCANCODE_A]) {
-                camera->strafe(1.0);
+                camera->strafe(-speed);
         }
 
         if(keymap[SDL_SCANCODE_D]) {
-                camera->strafe(-1.0);
+                camera->strafe(speed);
         }
 }
 

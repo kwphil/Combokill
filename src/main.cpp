@@ -15,7 +15,7 @@
 #include "error.h"
 #include "poly.h"
 #include "keys.hpp"
-#include "object.hpp"
+#include "camera.hpp"
 
 int main();
 int init();
@@ -28,6 +28,8 @@ static struct {
         SDL_Event event;
 } sdl_data;
 
+Camera* camera;
+
 int main() {
         int status = init();
 
@@ -39,8 +41,11 @@ int main() {
 
         while(running) {
                 poll_event(&sdl_data.event, &running);
-
+                
                 draw_poly();
+
+                move_camera();
+
                 SDL_GL_SwapWindow(sdl_data.window);
 
                 SDL_Delay(16);
@@ -99,7 +104,7 @@ int init() {
         sdl_data.context = context;
  
         // Done initializing window, set camera
-        Object camera(NULL, glm::vec3(0, 0, 0));
+        camera = make_object<Camera>(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
         // Done initializing camera, start drawing
         draw_poly_init();

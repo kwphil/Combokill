@@ -6,8 +6,6 @@
 #include "poly.h"
 #include "error.h"
 
-extern GLfloat* matrix_transform;
-
 size_t vertex_len = 9;
 
 float _vertices[] = {
@@ -20,6 +18,8 @@ float* vertices = _vertices;
 
 GLuint VAO, VBO;
 GLuint shaderProgram;
+
+GLfloat* create_transform();
 
 char *read_file(const char *path, size_t *out_len) {
     FILE *fp = fopen(path, "rb");
@@ -99,6 +99,13 @@ int build_shaders(const char* vert_path, const char* frag_path) {
         glAttachShader(shaderProgram, fragmentShader);
         glLinkProgram(shaderProgram);
 
+        glGetShaderiv(shaderProgram, GL_LINK_STATUS, &success);
+        if(!success) {
+                glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
+                fprintf(stderr, "Shader program failed to link:\n%s\n", infoLog);
+                exit(ERROR_SHADER_NOT_LOADED);
+        }
+
         /* Delete shaders */
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
@@ -130,10 +137,7 @@ void draw_poly() {
         glUseProgram(shaderProgram);
 
         GLuint mvpLoc = glGetUniformLocation(shaderProgram, "MVP");
-
-        printf("shaderProgram = %u, mvpLoc = %d\n", shaderProgram, mvpLoc);
-        fflush(stdout);
-        glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, matrix_transform);
+        glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, create_transform());
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 12*3);

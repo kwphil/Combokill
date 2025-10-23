@@ -1,4 +1,6 @@
+#include <SDL3/SDL_oldnames.h>
 #include <cstdlib>
+#include <glm/ext/vector_float3.hpp>
 #include <iostream>
 
 #include <SDL3/SDL.h>
@@ -6,27 +8,31 @@
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_keyboard.h>
 
 #include <GL/glew.h>
 
+#include "error.h"
 #include "poly.h"
+#include "keys.hpp"
+#include "object.hpp"
 
 int main();
-bool init();
+int init();
 void quit();
 void poll_event(SDL_Event* event, bool* running);
 
-static struct SdlData {
+static struct {
         SDL_Window* window;
         SDL_GLContext context;
         SDL_Event event;
 } sdl_data;
 
 int main() {
-        if(init()) {
-                std::cerr << SDL_GetError() << std::endl;
-                SDL_Quit();
-                return EXIT_FAILURE;
+        int status = init();
+
+        if(status != 0) {
+                return status;
         }
 
         bool running = true;
@@ -50,10 +56,18 @@ void poll_event(SDL_Event* event, bool* running) {
                 if(sdl_data.event.type == SDL_EVENT_QUIT) {
                         *running = false;
                 }
+
+                if(sdl_data.event.type == SDL_EVENT_KEY_DOWN) {
+                        update_key(sdl_data.event.key.scancode, true);
+                }
+
+                if(sdl_data.event.type == SDL_EVENT_KEY_UP) {
+                        update_key(sdl_data.event.key.scancode, false);
+                }
         }
 }
 
-bool init() {
+int init() {
         SDL_Init(SDL_INIT_VIDEO);
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -68,7 +82,7 @@ bool init() {
 
         if(!(window || context)) {
                 std::cerr << SDL_GetError() << std::endl;
-                return 1;
+                return ERROR_SDL_INIT;
         }
 
         glewExperimental = GL_TRUE;
@@ -76,15 +90,20 @@ bool init() {
         GLenum err = glewInit();
         if(err != GLEW_OK) {
                 std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(err) << "\n";
-                return 1;
+                return ERROR_GLEW_INIT;
         }
 
         SDL_GL_MakeCurrent(window, context);
 
         sdl_data.window = window;
         sdl_data.context = context;
-        
+ 
+        // Done initializing window, set camera
+        Object camera(NULL, glm::vec3(0, 0, 0));
+
+        // Done initializing camera, start drawing
         draw_poly_init();
+
 
         return 0;
 }

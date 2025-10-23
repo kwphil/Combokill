@@ -112,13 +112,13 @@ void draw_poly_init() {
 
         glBindVertexArray(VAO);
 
+        build_shaders("shaders/vert.glsl", "shaders/frag.glsl");
+
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertex_len*sizeof(float), vertices, GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
         glEnableVertexAttribArray(0);
-
-        build_shaders("shaders/vert.glsl", "shaders/frag.glsl");
 
         glEnable(GL_DEPTH_TEST);
 }
@@ -130,6 +130,9 @@ void draw_poly() {
         glUseProgram(shaderProgram);
 
         GLuint mvpLoc = glGetUniformLocation(shaderProgram, "MVP");
+
+        printf("shaderProgram = %u, mvpLoc = %d\n", shaderProgram, mvpLoc);
+        fflush(stdout);
         glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, matrix_transform);
 
         glBindVertexArray(VAO);

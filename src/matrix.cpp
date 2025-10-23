@@ -8,6 +8,8 @@
 
 #include "object.hpp"
 
+GLfloat* matrix_transform;
+
 const GLfloat* create_transform() {
         glm::mat4 model = glm::mat4(1.0f);
         
@@ -28,8 +30,7 @@ const GLfloat* create_transform() {
         
         static glm::mat4 matrix = projection * view * model;
 
+        matrix_transform = const_cast<GLfloat*>(glm::value_ptr(matrix));
         return glm::value_ptr(matrix);
 }
-
-GLfloat* matrix_transform = const_cast<GLfloat*>(create_transform());
 

@@ -5,7 +5,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <GL/glew.h>
-#include <iostream>
 
 #include "camera.hpp"
 #include "etc.h"

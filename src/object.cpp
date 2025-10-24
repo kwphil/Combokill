@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cstdlib>
 
 #include <glm/glm.hpp>
@@ -19,7 +20,7 @@ Object::Object(const Object& other) {
 }
 
 void Renderable::render(float* ptr) {
-        for(int i = 0; i < vertices_len/3; i++) {
+        for(int i = 0; i < vertices_len; i += 3) {
                 glm::vec3 new_vertices = glm::vec3(vertices[i], vertices[i+1], vertices[i+2]) + origin;
                 
                 ptr[i] = new_vertices.x;
@@ -28,23 +29,26 @@ void Renderable::render(float* ptr) {
         }
 }
 
-EXTERN_C size_t render(float* list, size_t size) {
+EXTERN_C float* render(float* list, size_t* size) {
         size_t required_size = 0;
 
         // Am not worried about speed right now
-        for(auto curr : render_list) {
+        for(Renderable* curr : render_list) {
                 required_size += curr->vertices_len;
         }
 
-        if(size < required_size) {
-                realloc(list, required_size*sizeof(float));
+        if(*size < required_size) {
+                list = (float*)realloc(list, required_size*sizeof(float));
         }
 
-        for(int i = 0; i < required_size; i++) {
-                render_list[i]->render(list+i);               
+        int offset = 0;
+        for(auto curr : render_list) {
+                curr->render(list+offset);
+                offset += curr->vertices_len;
         }
 
-        return required_size > size ? required_size : size;
+        *size = required_size > *size ? required_size : *size;
+        return list;
 }
 
 

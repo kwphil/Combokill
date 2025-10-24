@@ -16,9 +16,9 @@ GLuint shaderProgram;
 GLfloat* create_transform();
 
 // Returns new size of list
-extern size_t render(float* list, size_t size);
+extern float* render(float* list, size_t* size);
 
-char *read_file(const char *path, size_t *out_len) {
+char* read_file(const char* path, size_t* out_len) {
     FILE *fp = fopen(path, "rb");
 
     if (!fp) return NULL;
@@ -121,15 +121,13 @@ void draw_poly_init() {
         glEnable(GL_DEPTH_TEST);
 
         vertices = (float*)malloc(sizeof(float));
-
-
 }
 
 void draw_poly() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        vertex_len = render(vertices, vertex_len);
+        vertices = render(vertices, &vertex_len);
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertex_len*sizeof(float), vertices, GL_STATIC_DRAW);

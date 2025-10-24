@@ -22,6 +22,10 @@ glm::vec3 Camera::normalize_right() {
         return glm::normalize(glm::cross(look_at, glm::vec3(0.0, 1.0, 0.0)));
 }
 
+void Camera::move(float speed) {
+        origin += look_at * speed * glm::vec3(1.0, 0.0, 1.0);
+}
+
 void Camera::strafe(float speed) {
         origin += normalize_right() * speed;
 }
@@ -30,11 +34,11 @@ void move_camera(float speed) {
         Camera* camera = static_cast<Camera*>(object_list.at(0));
 
         if(keymap[SDL_SCANCODE_W]) {
-                camera->origin -= glm::vec3(0.0, 0.0, speed);
+                camera->move(speed);
         }
 
         if(keymap[SDL_SCANCODE_S]) {
-                camera->origin += glm::vec3(0.0, 0.0, speed);
+                camera->move(-speed);
         }
 
         if(keymap[SDL_SCANCODE_A]) {

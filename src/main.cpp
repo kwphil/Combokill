@@ -18,7 +18,11 @@
 #include "camera.hpp"
 
 #define WINDOW_FLAGS \
-        (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL | SDL_WINDOW_MOUSE_GRABBED)
+        (SDL_WINDOW_FULLSCREEN \
+         | SDL_WINDOW_OPENGL \
+         | SDL_WINDOW_MOUSE_GRABBED \
+         | SDL_WINDOW_MOUSE_GRABBED \
+         )
 
 int main();
 int init();
@@ -144,6 +148,11 @@ int init() {
         sdl_data.window = window;
         sdl_data.context = context;
  
+        if(!SDL_SetWindowRelativeMouseMode(sdl_data.window, true)) {
+                std::cerr << SDL_GetError() << std::endl;
+                return ERROR_SDL_INIT;
+        }
+
         // Done initializing window, set camera
         camera = make_object<Camera>(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -5.0f));
 

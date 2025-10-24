@@ -12,6 +12,7 @@ public:
         Camera(glm::vec3 origin, glm::vec3 look_at);
         Camera(const Camera& other);
         const glm::vec3 get_look_at() const { return look_at; }
+        void move(float speed);
         void strafe(float speed);
 };
 

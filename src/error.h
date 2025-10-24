@@ -3,9 +3,11 @@
 
 enum ErrorCodes {
         ERROR_OK,
+        ERROR_SDL_DISPLAY,
+        ERROR_SDL_DISPLAY_MODE,
         ERROR_SDL_INIT,
         ERROR_GLEW_INIT,
-        ERROR_RESERVED0,
+        _ERROR_RESERVED0,
         ERROR_SHADER_NOT_FOUND,
         ERROR_SHADER_NOT_LOADED
 };

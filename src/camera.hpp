@@ -16,3 +16,4 @@ public:
 };
 
 extern void move_camera(float speed = 0.1f);
+extern void process_mouse(float sensitivity);

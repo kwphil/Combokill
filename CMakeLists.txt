@@ -9,6 +9,8 @@ find_package(SDL3 REQUIRED CONFIG)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lstdc++")
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.c)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

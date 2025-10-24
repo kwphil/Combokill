@@ -6,20 +6,17 @@
 #include "poly.h"
 #include "error.h"
 
-size_t vertex_len = 9;
+size_t vertex_len = 1;
 
-float _vertices[] = {
-        1.0, 1.0, 1.0,
-        -1.0, -1.0, -1.0,
-        1.0, -1.0, 1.0
-};
-
-float* vertices = _vertices;
+float* vertices = NULL;
 
 GLuint VAO, VBO;
 GLuint shaderProgram;
 
 GLfloat* create_transform();
+
+// Returns new size of list
+extern size_t render(float* list, size_t size);
 
 char *read_file(const char *path, size_t *out_len) {
     FILE *fp = fopen(path, "rb");
@@ -121,18 +118,24 @@ void draw_poly_init() {
 
         build_shaders("shaders/vert.glsl", "shaders/frag.glsl");
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertex_len*sizeof(float), vertices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
-        glEnableVertexAttribArray(0);
-
         glEnable(GL_DEPTH_TEST);
+
+        vertices = (float*)malloc(sizeof(float));
+
+
 }
 
 void draw_poly() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        vertex_len = render(vertices, vertex_len);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertex_len*sizeof(float), vertices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+        glEnableVertexAttribArray(0);
 
         glUseProgram(shaderProgram);
 

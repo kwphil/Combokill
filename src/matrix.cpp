@@ -8,6 +8,7 @@
 
 #include "camera.hpp"
 #include "etc.h"
+#include "object.hpp"
 
 EXTERN_C const GLfloat* create_transform() {
         static glm::mat4 matrix;

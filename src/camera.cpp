@@ -1,8 +1,6 @@
 #include <SDL3/SDL_scancode.h>
 
-#include <glm/geometric.hpp>
 #include <glm/glm.hpp>
-#include <iostream>
 
 #include "camera.hpp"
 #include "keys.hpp"

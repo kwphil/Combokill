@@ -37,6 +37,20 @@ int main() {
                 return status;
         }
 
+// --- TEMP ---
+        float _vertices[] = {
+                1.0, 1.0, 1.0,
+                -1.0, -1.0, -1.0,
+                1.0, -1.0, 1.0
+        };
+
+        Renderable* test_obj = make_renderable<Renderable>(
+                glm::vec3(0.0, 0.0, 0.0),
+                _vertices,
+                9
+        );
+// --- TEMP ---
+
         bool running = true;
 
         while(running) {

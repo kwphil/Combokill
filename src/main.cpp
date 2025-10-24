@@ -1,4 +1,6 @@
 #include <SDL3/SDL_oldnames.h>
+#include <SDL3/SDL_scancode.h>
+#include <SDL3/SDL_stdinc.h>
 #include <cstdlib>
 #include <glm/ext/vector_float3.hpp>
 #include <iostream>
@@ -101,6 +103,15 @@ void event_match(SDL_Event* event, bool* running) {
 
 void poll_event(SDL_Event* event, bool* running) {
         while(SDL_PollEvent(event)) {
+                if(keymap[SDL_SCANCODE_LALT] && keymap[SDL_SCANCODE_F4]) {
+                        SDL_Event quit;
+                        SDL_zero(quit);
+
+                        quit.type = SDL_EVENT_QUIT;
+
+                        SDL_PushEvent(&quit);
+                }
+
                 event_match(event, running);
         }
 }

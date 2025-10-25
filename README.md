@@ -14,6 +14,7 @@ This game is meant to bring life and style into regular shooting
 ### Dependencies
 
 * SDL3
+* GLEW
 * CMake
 * gcc
 

@@ -78,6 +78,9 @@ int main() {
 
         quit();
 
+        free(_vertices);
+        free(test_obj);
+
         return EXIT_SUCCESS;
 }
 

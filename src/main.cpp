@@ -14,6 +14,7 @@
 
 #include <GL/glew.h>
 
+#include "assets.h"
 #include "error.h"
 #include "poly.h"
 #include "keys.hpp"
@@ -47,19 +48,13 @@ int main() {
         }
 
 // --- TEMP ---
-        float _vertices[] = {
-                5.0, -1.0, 5.0, 1.0, 1.0, 1.0,
-                5.0, -1.0, -5.0, 0.0, 1.0, 1.0,
-                -5.0, -1.0, 5.0, 1.0, 1.0, 0.0,
-                -5.0, -1.0, -5.0, 1.0, 0.0, 1.0,
-                -5.0, -1.0, 5.0, 0.0, 0.0, 1.0,
-                5.0, -1.0, -5.0, 1.0, 0.0, 0.0
-        };
+        size_t _vertices_size;
+        float* _vertices = asset_csv("assets/floor.csv", &_vertices_size);
 
         Renderable* test_obj = make_renderable<Renderable>(
                 glm::vec3(0.0, 0.0, 0.0),
                 _vertices,
-                36
+                _vertices_size
         );
 // --- TEMP ---
 

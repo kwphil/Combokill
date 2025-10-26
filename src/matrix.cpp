@@ -15,8 +15,6 @@ EXTERN_C const GLfloat* create_transform() {
 
         glm::mat4 model = glm::mat4(1.0f);
  
-        // Sorry for the clearly unsafe code, but
-        // Taking the Object pointer, converting it to a Camera pointer
         Camera* camera = static_cast<Camera*>(object_list.at(0));
 
         glm::mat4 view = glm::lookAt(

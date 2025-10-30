@@ -58,28 +58,36 @@ int main() {
         );
 // --- TEMP ---
 
+        // Game loop
         bool running = true;
 
         while(running) {
                 mouse_x = 0.0f;
                 mouse_y = 0.0f;
 
+                // Get the inputs
                 poll_event(&sdl_data.event, &running);
                 
+                // Render
                 draw_poly();
 
+                // Adjust camera
                 move_camera();
                 process_mouse(0.1);
                         
+                // Push the window on screen
                 SDL_GL_SwapWindow(sdl_data.window);
 
+                // Delay to prevent full data
                 SDL_Delay(16);
         }
 
         quit();
 
+// --- TEMP ---
         free(_vertices);
         free(test_obj);
+// --- TEMP ---
 
         return EXIT_SUCCESS;
 }
@@ -104,6 +112,7 @@ void event_match(SDL_Event* event, bool* running) {
 
 void poll_event(SDL_Event* event, bool* running) {
         while(SDL_PollEvent(event)) {
+                // ALT+F4 will quit
                 if(keymap[SDL_SCANCODE_LALT] && keymap[SDL_SCANCODE_F4]) {
                         SDL_Event quit;
                         SDL_zero(quit);

@@ -20,6 +20,7 @@ Object::Object(const Object& other) {
 }
 
 void Renderable::render(float* ptr) {
+        // Just loop through and apply the vertices to the world space
         for(int i = 0; i < vertices_len; i += 3) {
                 glm::vec3 new_vertices = glm::vec3(vertices[i], vertices[i+1], vertices[i+2]) + origin;
                 
@@ -29,6 +30,7 @@ void Renderable::render(float* ptr) {
         }
 }
 
+// Just loop through and render everything (also checks for required space)
 EXTERN_C float* render(float* list, size_t* size) {
         size_t required_size = 0;
 

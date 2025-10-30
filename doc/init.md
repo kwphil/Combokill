@@ -1,18 +1,17 @@
-# Init
+# Init System
 
-`bool init()`
+## Window Initialization
 
-Initializes the program. Will return 0 if ok, and 1 if error.
+### Description
 
-Sets data in `sdl_data`
+This stage sets up the primary rendering surface and OpenGL context through SDL. It defines how the window behaves (fullscreen, input capture, etc.) and initializes any platform-level graphics requirements.
 
-`sdl_data.window` is an `SDL_Window*` object. 
-`sdl_data.renderer` is an `SDL_Renderer*` object.
-`sdl_data.event` is an `SDL_Event`, but it is not set by init().
+### Window Flags
+- `SDL_WINDOW_FULLSCREEN`
+  - forces the display into fullscreen mode 
+- `SDL_WINDOW_OPENGL`
+  - required for OpenGL context creation.
+- `SDL_WINDOW_MOUSE_GRABBED`
+  - confines mouse input to the window.
 
----
-
-`void quit()`
-
-Simply destroys all unused data. Does not exit, you will need to do that.
-
+### Object System

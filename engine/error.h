@@ -1,6 +1,7 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+/// @brief An exit code wrapper to standardize error codes
 enum ErrorCodes {
         ERROR_OK,
         ERROR_SDL_DISPLAY,

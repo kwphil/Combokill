@@ -19,11 +19,15 @@ Camera::Camera(const Camera& other)
 }
 
 glm::vec3 Camera::normalize_right() {
+        // Normalizes the right vector created from look_at
         return glm::normalize(glm::cross(look_at, glm::vec3(0.0, 1.0, 0.0)));
 }
 
 void Camera::move(float speed) {
-        origin += look_at * speed * glm::vec3(1.0, 0.0, 1.0);
+        // Normalizes the forward vector created from look_at
+        glm::forward = glm::normalize(glm::vec3(look_at.x, 0.0, look_at.z));
+        // Then applies that to the origin
+        origin += forward * speed;
 }
 
 void Camera::strafe(float speed) {
@@ -31,8 +35,10 @@ void Camera::strafe(float speed) {
 }
 
 void move_camera(float speed) {
+        // Grab the camera object
         Camera* camera = static_cast<Camera*>(object_list.at(0));
 
+        // And apply movement based on all the keys currently pressed
         if(keymap[SDL_SCANCODE_W]) {
                 camera->move(speed);
         }
@@ -50,29 +56,36 @@ void move_camera(float speed) {
         }
 }
 
+// Process the look_at vec3 based on camera movement
 void process_mouse(float sensitivity) {
-    static float yaw = -90.0f;  // start facing -Z
-    static float pitch = 0.0f;
+        // Since these are static, they are only applied once
+        static float yaw = -90.0f;  // start facing -Z
+        static float pitch = 0.0f;
 
-    Camera* camera = static_cast<Camera*>(object_list.at(0));
 
-    yaw += mouse_x * sensitivity;
-    pitch -= mouse_y * sensitivity;
+        Camera* camera = static_cast<Camera*>(object_list.at(0));
 
-    // Deadzone to prevent drift
-    if (fabs(mouse_x) < MOUSE_REL_DEADZONE) mouse_x = 0.0f;
-    if (fabs(mouse_y) < MOUSE_REL_DEADZONE) mouse_y = 0.0f;
+        // Deadzone to prevent drift
+        if (fabs(mouse_x) < MOUSE_REL_DEADZONE) mouse_x = 0.0f;
+        if (fabs(mouse_y) < MOUSE_REL_DEADZONE) mouse_y = 0.0f;
 
-    if (pitch > 89.0f)
+        // Reapply yaw and pitch based on the mouse movement
+        yaw += mouse_x * sensitivity;
+        pitch -= mouse_y * sensitivity;
+
+        // Prevent weird camera movement from turning too much
+        if (pitch > 89.0f)
         pitch = 89.0f;
-    if (pitch < -89.0f)
+        if (pitch < -89.0f)
         pitch = -89.0f;
 
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        // And apply the center 
+        glm::vec3 direction(
+                cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
+                sin(glm::radians(pitch)),
+                sin(glm::radians(yaw)) * cos(glm::radians(pitch))
+        );
 
-    camera->look_at = glm::normalize(direction);
+        camera->look_at = glm::normalize(direction);
 }
 

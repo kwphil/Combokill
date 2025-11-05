@@ -11,7 +11,7 @@ find_package(OpenGL REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lstdc++ -I./")
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS engine/*.c*)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS core/*.c* world/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
